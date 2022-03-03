@@ -10,9 +10,30 @@ contract Exchange {
 	uint256 public feePercent;
 	mapping(address => mapping(address => uint256)) public tokens;
 	address constant ETHER = address(0); //save space by storing Eth in the tokens mapping
+	mapping(uint256=> _Order)public orders;
+	uint256 public orderCount;
 
 	event Deposit(address token, address user, uint256 amount, uint256 balance);
 	event Withdrawal(address token, address user, uint256 amount, uint256 balance);
+	event Order(
+		uint id,
+		address user,
+		address tokenGet,
+		uint amountGet,
+		address tokenGive,
+		uint amountGive,
+		uint timestamp
+	);
+
+	struct _Order {
+		uint id;
+		address user;
+		address tokenGet;
+		uint amountGet;
+		address tokenGive;
+		uint amountGive;
+		uint timestamp;
+	}
 
 	constructor (address _feeAccount, uint256 _feePercent) public{
 		feeAccount = _feeAccount;
@@ -46,5 +67,11 @@ contract Exchange {
 		require(Token(_token).transfer(msg.sender, _amount));
 		tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
 		emit Withdrawal(_token, msg.sender, _amount, tokens[_token][msg.sender]);
+	}
+
+	function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint _amountGive) public {
+		orderCount = orderCount.add(1);
+		orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
+		emit Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
 	}
 }

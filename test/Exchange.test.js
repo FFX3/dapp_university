@@ -173,6 +173,20 @@ contract('Exchange', ([deployer, feeAccount, user1])=>{
 
 		})
 	})
+
+	describe('making orders', async()=>{
+		let result
+
+		beforeEach(async()=>{
+			result = await exchange.makeOrder(token.address, tokens(1), ETHER_ADDRESS, ether(1), { from: user1 })
+		})
+
+		it('tracks the newly created order', async()=>{
+			const orderCount = await exchange.orderCount()
+			orderCount.toString().should.equal('1')
+		})
+	})
+
 	describe('fallback', ()=>{
 		it('reverts when Ether is sent', async()=>{
 			await exchange.sendTransaction({ value: 1, from: user1 }).should.be.rejectedWith(EVM_REVERT)
