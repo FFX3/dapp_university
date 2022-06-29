@@ -242,13 +242,50 @@ contract('Exchange', ([deployer, feeAccount, user1, user2])=>{
 					balance = await exchange.balanceOf(ETHER_ADDRESS, user2)
 					balance.toString().should.equal(ether(1).toString(),'user2 received Ether')
 					balance =  await exchange.balanceOf(ETHER_ADDRESS, user1)
-					balance.toString().should.equal(ether(1).toString(),'user2 received Ether')
+					balance.toString().should.equal('0', 'user1 Ether deducted')
 					balance = await exchange.balanceOf(token.address, user2)
 					balance.toString().should.equal(tokens(0.9).toString(), 'user2 tokens deducted with fee applied')
 
 					const feeAccount = await exchange.feeAccount()
 					balance = await exchange.balanceOf(token.address, feeAccount)
 					balance.toString().should.equal(tokens(0.1).toString(), 'feeAccount receive fee')
+				})
+
+				it('emits a "Trade" event', async()=>{
+					const log = result.logs[0]
+					log.event.should.eq('Trade')
+					const event = log.args
+					event.id.toString().should.equal('1', 'id is correct')
+					event.user.should.equal(user1, 'user is correct')
+					event.tokenGet.should.equal(token.address, 'tokenGet is correct')
+					event.amountGet.toString().should.equal(tokens(1).toString(), 'amountGet is correct')
+					event.tokenGive.toString().should.equal(ETHER_ADDRESS, 'tokenGive is correct')
+					event.amountGive.toString().should.equal(ether(1).toString(), 'amountGive is correct')
+					event.filledBy.should.equal(user2, 'filledBy is correct')
+					event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
+				})
+
+				it('updates filled orders', async()=>{
+					const orderFilled = await exchange.ordersFilled(1)
+					orderFilled.should.equal(true)
+				})
+			})
+
+			describe('failure', async()=>{
+				it('rejects invalid order ids', async()=>{
+					const invalidOrderId = 99999
+					await exchange.fillOrder(invalidOrderId, {from:user2})
+						.should.be.rejectedWith(EVM_REVERT)
+				})
+
+				it('rejects already-filled orders', async()=>{
+					await exchange.fillOrder('1', {from:user2}).should.be.fulfilled
+					await exchange.fillOrder('1', {from:user2}).should.be.rejectedWith(EVM_REVERT)
+				})
+
+				it('rejects concelled orders', async()=>{
+					await exchange.cancelOrder('1', {from:user1}).should.be.fulfilled
+					await exchange.fillOrder('1', {from:user2}).should.be.rejectedWith(EVM_REVERT)
 				})
 			})
 		})
