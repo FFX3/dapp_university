@@ -2,15 +2,17 @@ import React, { useEffect } from 'react'
 import './App.css';
 import Web3 from 'web3'
 import Token from '../abis/Token.json'
+import { loadWeb3 } from '../store/interactions'
+import { connect } from 'react-redux'
 
-function App() {
+function App(props) {
 
 	useEffect(()=>{
-		loadBlockchainData()
+		loadBlockchainData(props.dispatch)
 	},[])
 
-	async function loadBlockchainData(){
-		const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
+	async function loadBlockchainData(dispatch){
+		const web3 = loadWeb3(dispatch)
 		const network = await web3.eth.net.getNetworkType()
 		const networkId = await web3.eth.net.getId()
 		const accounts = await web3.eth.requestAccounts()
@@ -18,10 +20,6 @@ function App() {
 		const networks = Token.networks
 		const tokenAddress = networks[networkId].address
 		const token = new web3.eth.Contract(tokenAbi, tokenAddress)
-
-		//test
-		const totalSupply = await token.methods.totalSupply().call()
-		console.log(totalSupply)
 	}
 
   return (
@@ -113,4 +111,10 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+
+	}
+}
+
+export default connect(mapStateToProps)(App);
