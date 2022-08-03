@@ -28,3 +28,24 @@ export const exchangeLoaded = (contract) => {
 		contract
 	}
 }
+
+export const cancelledOrdersLoaded = (cancelledOrders) => {
+	return {
+		'type': 'CANCELLED_ORDERS_LOADED',
+		cancelledOrders
+	}
+}
+
+export const filledOrdersLoaded = (filledOrders) => {
+	return {
+		'type': 'FILLED_ORDERS_LOADED',
+		filledOrders
+	}
+}
+
+export const allOrdersLoaded = (allOrders) => {
+	return {
+		'type': 'ALL_ORDERS_LOADED',
+		allOrders
+	}
+}

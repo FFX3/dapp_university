@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import './App.css'
 import { connect } from 'react-redux'
 import { 
@@ -13,15 +13,8 @@ import Navbar from './navbar';
 import Content from './Content';
 
 function App(props) {
-
-	useEffect(()=>{
-		loadBlockchainData()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[])
 	
-	
-	
-	async function loadBlockchainData(){
+	const loadBlockchainData = useCallback( async () => {
 		const dispatch = props.dispatch
 		const web3 = loadWeb3(dispatch)
 		loadWeb3Account(web3, dispatch)
@@ -30,7 +23,11 @@ function App(props) {
 		const exchange = await loadExchange(web3, networkId, dispatch)
 		if(!token){window.alert('Token smart contract not detected on the current network. Please select another network with Metamask'); return}
 		if(!exchange){window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask'); return}
-	}
+	},[props.dispatch])
+
+	useEffect(()=>{
+		loadBlockchainData()
+	},[loadBlockchainData])
 
   return (
 		<div className="App">
