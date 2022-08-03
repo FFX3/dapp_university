@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import './App.css';
 import Web3 from 'web3'
 import Token from '../abis/Token.json'
-import { loadWeb3 } from '../store/interactions'
+import { loadToken, loadWeb3, loadWeb3Account, loadExchange } from '../store/interactions'
 import { connect } from 'react-redux'
 
 function App(props) {
@@ -15,11 +15,9 @@ function App(props) {
 		const web3 = loadWeb3(dispatch)
 		const network = await web3.eth.net.getNetworkType()
 		const networkId = await web3.eth.net.getId()
-		const accounts = await web3.eth.requestAccounts()
-		const tokenAbi = Token.abi
-		const networks = Token.networks
-		const tokenAddress = networks[networkId].address
-		const token = new web3.eth.Contract(tokenAbi, tokenAddress)
+		const account = loadWeb3Account(web3, dispatch)
+		const token = loadToken(web3, networkId, dispatch)
+		const exchange = loadExchange(web3, networkId, dispatch)
 	}
 
   return (
