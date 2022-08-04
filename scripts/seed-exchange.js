@@ -102,7 +102,7 @@ module.exports = async function(callback){
 		}
 
 		for(let i=1; i<= 10; i++){
-			result = await exchange.makeOrder(ETHER_ADDRESS, ether(0.01), token.address, ether(10 * i), {from:user1})
+			result = await exchange.makeOrder(ETHER_ADDRESS, ether(0.01), token.address, tokens(10 * i), {from:user1})
 			console.log(`Made order from ${user1}`)
 
 			await wait(1)

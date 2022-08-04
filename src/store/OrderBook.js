@@ -17,12 +17,12 @@ const OrderBook = (props) => {
 	
 	const buildOrdersHTML = () => {
 		const { orderBook } = props
-		console.log(orderBook.buy)
-		if(!(orderBook.buy && orderBook.sell && orderBook.buy.length && orderBook.sell.length)){return Array(2).fill(<Spinner type='table' />)}
+		console.log(orderBook)
+		if(!(orderBook.buyOrders.length && orderBook.sellOrders.length)){return Array(2).fill(<Spinner type='table' />)}
 		
 		return [
-			orderBook.buy.map(order => renderOrder(order)),
-			orderBook.sell.map(order => renderOrder(order))
+			orderBook.buyOrders.map(order => renderOrder(order)),
+			orderBook.sellOrders.map(order => renderOrder(order))
 		]
 	}
 
