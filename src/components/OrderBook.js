@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { orderBookLoadedSelector, orderBookSelector } from "./selectors";
-import Spinner from "../components/Spinner";
+import { orderBookLoadedSelector, orderBookSelector } from "../store/selectors";
+import Spinner from "./Spinner";
 
 const OrderBook = (props) => {
 	
@@ -17,7 +17,6 @@ const OrderBook = (props) => {
 	
 	const buildOrdersHTML = () => {
 		const { orderBook } = props
-		console.log(orderBook)
 		if(!(orderBook.buyOrders.length && orderBook.sellOrders.length)){return Array(2).fill(<Spinner type='table' />)}
 		
 		return [
