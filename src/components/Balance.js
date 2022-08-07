@@ -108,7 +108,7 @@ const Balance = (props) => {
 							<div className="col-12 col-sm pr-sm-2">
 								<input 
 								type="text"
-								placeholder='SHINO Amount'
+								placeholder='ETH Amount'
 								ref={widthdrawTokenAmountRef}
 								className='form-control form-control-sm bg-dark text-white'
 								required
@@ -126,7 +126,7 @@ const Balance = (props) => {
 							<div className="col-12 col-sm pr-sm-2">
 								<input 
 								type="text"
-								placeholder='ETH Amount'
+								placeholder='SHINO Amount'
 								ref={widthdrawAmountRef}
 								className='form-control form-control-sm bg-dark text-white'
 								required
