@@ -35,7 +35,7 @@ const exchange = (state = {}, action) => {
 		case 'ORDER_CANCELLED':
 			let orderCancellingID = state.orderCancelling
 			const cancelledOrderId = action.order.id
-			if(orderCancellingID === cancelledOrderId) { orderCancellingID = 0}
+			if(orderCancellingID === cancelledOrderId) { orderCancellingID = 0 }
 			return {
 				...state,
 				orderCancelling: orderCancellingID,
@@ -45,6 +45,27 @@ const exchange = (state = {}, action) => {
 						...state.cancelledOrders.data,
 						action.order
 					]
+				}
+			}
+		case 'ORDER_FILLING':
+				return {...state, orderFilling: action.orderId}
+		case 'ORDER_FILLED':
+			let orderFillingID = state.orderFilling
+			const filledOrderId = action.order.id
+			if(orderFillingID === filledOrderId) { orderFillingID = 0 }
+
+			let data = state.filledOrders.data
+			const index = state.filledOrders.data.findIndex(order => order.id === action.order.id)
+			if(index === -1){
+				data = [...state.filledOrders.data, action.order]
+			}
+
+			return {
+				...state,
+				orderFilling: orderFillingID,
+				cancelledOrders: {
+					...state.cancelledOrders,
+					data
 				}
 			}
 		default:

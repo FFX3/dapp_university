@@ -64,8 +64,16 @@ export const orderCancelled = (order) => {
 	}
 }
 
-export const orderCancellingCancelled = () => {
+export const orderFilling = (orderId) => {
 	return {
-		'type': 'ORDER_CANCELLING_CANCELLED'
+		'type': 'ORDER_FILLING',
+		orderId
+	}
+}
+
+export const orderFilled = (order) => {
+	return {
+		'type': 'ORDER_FILLED',
+		order
 	}
 }

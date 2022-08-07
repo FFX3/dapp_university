@@ -157,7 +157,7 @@ const decorateOrderBookOrder = (order) => {
 		...order,
 		orderType,
 		orderTypeClass: (orderType === 'buy' ? GREEN : RED),
-		orderFillClass: orderType === 'buy' ? 'sell' : 'buy'
+		orderFillAction: orderType === 'buy' ? 'sell' : 'buy'
 	}
 }
 
@@ -274,3 +274,6 @@ const buildGraphData = (orders) => {
 
 const orderCancelling = state => get(state, 'exchange.orderCancelling', 0)
 export const orderCancellingSelector = createSelector(orderCancelling, id => id)
+
+const orderFilling = state => get(state, 'exchange.orderFilling', 0)
+export const orderFillingSelector = createSelector(orderFilling, id => id)
