@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
-import { loadAllOrders } from "../store/interactions";
+import { loadAllOrders, subscribeToEvents } from "../store/interactions";
 import OrderBook from "./OrderBook"
 import { exchangeSelector } from "../store/selectors";
 import MyTransactions from "./MyTransactions";
@@ -10,7 +10,9 @@ import Trades from "./Trades";
 const Content = (props) => {
 
 	const loadBlockchainData = useCallback( async () => {
-		await loadAllOrders(props.exchange, props.dispatch)
+		const exchange = props.exchange, dispatch  = props.dispatch
+		await loadAllOrders(exchange, dispatch)
+		await subscribeToEvents(exchange, dispatch)
 	},[props.exchange, props.dispatch])
 
 	useEffect(()=>{

@@ -17,7 +17,7 @@ const OrderBook = (props) => {
 	
 	const buildOrdersHTML = () => {
 		const { orderBook } = props
-		if(!(orderBook.buyOrders.length && orderBook.sellOrders.length)){return Array(2).fill(<Spinner type='table' />)}
+		if(!(orderBook.buyOrders.length || orderBook.sellOrders.length)){return Array(2).fill(<Spinner type='table' />)}
 		
 		return [
 			orderBook.buyOrders.map(order => renderOrder(order)),

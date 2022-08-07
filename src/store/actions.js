@@ -49,3 +49,23 @@ export const allOrdersLoaded = (allOrders) => {
 		allOrders
 	}
 }
+
+export const orderCancelling = (orderId) => {
+	return {
+		'type': 'ORDER_CANCELLING',
+		orderId
+	}
+}
+
+export const orderCancelled = (order) => {
+	return {
+		'type': 'ORDER_CANCELLED',
+		order
+	}
+}
+
+export const orderCancellingCancelled = () => {
+	return {
+		'type': 'ORDER_CANCELLING_CANCELLED'
+	}
+}

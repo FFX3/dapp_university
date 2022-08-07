@@ -18020,12 +18020,12 @@
         }
       },
       "links": {},
-      "address": "0xb89784EBe5eCe479Dfc09EA3e143E57ef6c6cab9",
-      "transactionHash": "0x4f9f14a70ca181c5d72dd4bcd369de2b0498349c8d15cf7116ea882c195ff0a4"
+      "address": "0xadA97eef4903Da65b163b24Cd9f14cED2cb97b5A",
+      "transactionHash": "0x0d6e570169e0ef01d71c508678c11cf77197f0c11b3f6529ef91c5c56ec4c371"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2022-08-05T02:53:42.742Z",
+  "updatedAt": "2022-08-07T18:13:41.633Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

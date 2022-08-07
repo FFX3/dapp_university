@@ -2,12 +2,16 @@ import React from "react";
 import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import { 
+	accountSelector,
+	exchangeSelector,
 	myFilledOrdersLoadedSelector,
 	myFilledOrdersSelector,
 	myOpenOrdersLoadedSelector,
-	myOpenOrdersSelector
+	myOpenOrdersSelector,
+	orderCancellingSelector
 } from "../store/selectors";
 import Spinner from "./Spinner";
+import { cancelOrder } from "../store/interactions";
 
 const MyTransactions = (props) => {
 
@@ -28,8 +32,9 @@ const MyTransactions = (props) => {
 		)
 	}
 
-	const renderMyOpenOrders = (myOpenOrders) => {
-		if(!myOpenOrders.length){return <Spinner type='table' />}
+	const renderMyOpenOrders = (props) => {
+		const { myOpenOrders, dispatch, exchange, account } = props
+		if(myOpenOrders.length === 0 || props.orderCancelling !== 0){return <Spinner type='table' />}
 		return (
 			<>
 				{ myOpenOrders.map((order) => {
@@ -37,7 +42,13 @@ const MyTransactions = (props) => {
 						<tr key={order.id}>
 							<td className={`text-${order.orderTypeClass}`}>{order.orderSign}{order.tokenAmount}</td>
 							<td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-							<td className="text-muted">X</td>
+							<td className="text-muted cancel-order"
+								onClick={(e) => {
+									cancelOrder(dispatch, exchange, order, account)
+								}}
+							>
+								X
+							</td>
 						</tr>
 					)
 				}) }
@@ -73,7 +84,7 @@ const MyTransactions = (props) => {
 									<th>SHINO/ETH</th>
 								</tr>
 							</thead>
-							<tbody>{renderMyOpenOrders(props.myOpenOrders)}</tbody>
+							<tbody>{renderMyOpenOrders(props)}</tbody>
 						</table>
 					</Tab>
 				</Tabs>
@@ -88,6 +99,9 @@ const mapStateToProps = (state) => {
 		myFilledOrders:myFilledOrdersSelector(state),
 		myOpenOrdersLoaded:myOpenOrdersLoadedSelector(state),
 		myOpenOrders:myOpenOrdersSelector(state),
+		exchange:exchangeSelector(state),
+		account:accountSelector(state),
+		orderCancelling:orderCancellingSelector(state)
 	}
 }
 

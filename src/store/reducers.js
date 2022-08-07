@@ -30,6 +30,23 @@ const exchange = (state = {}, action) => {
 			return {...state, filledOrders: { loaded: true, data: action.filledOrders }}
 		case 'ALL_ORDERS_LOADED':
 			return {...state, allOrders: { loaded: true, data: action.allOrders }}
+		case 'ORDER_CANCELLING':
+			return {...state, orderCancelling: action.orderId}
+		case 'ORDER_CANCELLED':
+			let orderCancellingID = state.orderCancelling
+			const cancelledOrderId = action.order.id
+			if(orderCancellingID === cancelledOrderId) { orderCancellingID = 0}
+			return {
+				...state,
+				orderCancelling: orderCancellingID,
+				cancelledOrders: {
+					...state.cancelledOrders,
+					data: [
+						...state.cancelledOrders.data,
+						action.order
+					]
+				}
+			}
 		default:
 			return state
 	}
