@@ -87,7 +87,7 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
 		dispatch(orderCancelling(order.id))
 	})
 	.on('error', (error) => {
-		console.log(error)
+		console.error(error)
 		window.alert('There was an error!')
 	})
 }
@@ -120,7 +120,7 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 		dispatch(orderFilling(order.id))
 	})
 	.on('error', (error) => {
-		console.log(error)
+		console.error(error)
 		window.alert('There was an error!')
 	})
 }
@@ -147,7 +147,7 @@ export const depositEther = async (dispatch, exchange, web3, amount, account) =>
 		dispatch(balancesLoading())
 	})
 	.on('error', (error) => {
-		console.log(error)
+		console.error(error)
 		window.alert('There was an error!')
 	})
 }
@@ -158,7 +158,34 @@ export const widthdrawEther = async (dispatch, exchange, web3, amount, account) 
 		dispatch(balancesLoading())
 	})
 	.on('error', (error) => {
-		console.log(error)
+		console.error(error)
+		window.alert('There was an error!')
+	})
+}
+
+export const depositToken = (dispatch, exchange, token, web3, amount, account) => {
+	amount = web3.utils.toWei(amount, 'ether')
+
+	token.methods.approve(exchange.options.address, amount).send({ from: account })
+	.on('transactionHash', (hash) => {
+		exchange.methods.depositTokens(token.options.address, amount).send({ from: account })
+		.on('transactionHash', (hash) => {
+			dispatch(balancesLoading())
+		})
+		.on('error', (erro) => {
+			console.error(erro)
+			window.alert(`There was an error!`)
+		})
+	})
+}
+
+export const widthdrawToken = async (dispatch, exchange, token, web3, amount, account) => {
+	exchange.methods.withdrawTokens(token.options.address, web3.utils.toWei(amount, 'ether')).send({ from: account })
+	.on('transactionHash', (hash) => {
+		dispatch(balancesLoading())
+	})
+	.on('error', (error) => {
+		console.error(error)
 		window.alert('There was an error!')
 	})
 }

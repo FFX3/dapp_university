@@ -11,7 +11,7 @@ import {
 	exchangeTokenBalanceSelector,
 	balancesLoadingSelector
 } from '../store/selectors'
-import { loadBalances, depositEther, widthdrawEther } from '../store/interactions'
+import { loadBalances, depositEther, widthdrawEther, depositToken, widthdrawToken } from '../store/interactions'
 import Spinner from './Spinner'
 import { Tabs, Tab } from 'react-bootstrap'
 
@@ -19,6 +19,9 @@ const Balance = (props) => {
 
 	const depositAmountRef = useRef()
 	const widthdrawAmountRef = useRef()
+
+	const depositTokenAmountRef = useRef()
+	const widthdrawTokenAmountRef = useRef()
 	
 	const loadBlockchainData = useCallback( async () => {
 		await loadBalances(props.dispatch, props.web3, props.exchange, props.token, props.account)
@@ -77,11 +80,47 @@ const Balance = (props) => {
 								<button type='submit' className='btn btn-primary btn-block btn-sm'>Deposit</button>
 							</div>
 						</form>
+						<form className="row" onSubmit={(event) => {
+							event.preventDefault()
+							depositToken(props.dispatch, props.exchange, props.token, props.web3, depositTokenAmountRef.current.value, props.account)
+						}}
+						>
+							<div className="col-12 col-sm pr-sm-2">
+								<input 
+								type="text"
+								placeholder='SHINO Amount'
+								ref={depositTokenAmountRef}
+								className='form-control form-control-sm bg-dark text-white'
+								required
+								/>
+							</div>
+							<div className="col-12 col-sm-auto pl-sm-0">
+								<button type='submit' className='btn btn-primary btn-block btn-sm'>Deposit</button>
+							</div>
+						</form>
 					</Tab>
 					<Tab eventKey='withdraw' title='Withdraw' className='bg-dark'>
 					<form className="row" onSubmit={(event) => {
 							event.preventDefault()
-							widthdrawEther(props.dispatch, props.exchange, props.web3, widthdrawAmountRef.current.value, props.account)
+							widthdrawEther(props.dispatch, props.exchange, props.web3, widthdrawTokenAmountRef.current.value, props.account)
+						}}
+						>
+							<div className="col-12 col-sm pr-sm-2">
+								<input 
+								type="text"
+								placeholder='SHINO Amount'
+								ref={widthdrawTokenAmountRef}
+								className='form-control form-control-sm bg-dark text-white'
+								required
+								/>
+							</div>
+							<div className="col-12 col-sm-auto pl-sm-0">
+								<button type='submit' className='btn btn-primary btn-block btn-sm'>Widthdraw</button>
+							</div>
+						</form>
+						<form className="row" onSubmit={(event) => {
+							event.preventDefault()
+							widthdrawToken(props.dispatch, props.exchange, props.token, props.web3, widthdrawAmountRef.current.value, props.account)
 						}}
 						>
 							<div className="col-12 col-sm pr-sm-2">
