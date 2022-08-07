@@ -77,3 +77,43 @@ export const orderFilled = (order) => {
 		order
 	}
 }
+
+export const etherBalanceLoaded = (balance) => {
+	return {
+		'type': 'ETHER_BALANCE_LOADED',
+		balance
+	}
+}
+
+export const tokenBalanceLoaded = (balance) => {
+	return {
+		'type': 'TOKEN_BALANCE_LOADED',
+		balance
+	}
+}
+
+export const exchangeEtherBalanceLoaded = (balance) => {
+	return {
+		'type': 'EXCHANGE_ETHER_BALANCE_LOADED',
+		balance
+	}
+}
+
+export const exchangeTokenBalanceLoaded = (balance) => {
+	return {
+		'type': 'EXCHANGE_TOKEN_BALANCE_LOADED',
+		balance
+	}
+}
+
+export const balancesLoaded = () => {
+	return {
+		'type': 'BALANCES_LOADED'
+	}
+}
+
+export const balancesLoading = () => {
+	return {
+		'type': 'BALANCES_LOADING'
+	}
+}

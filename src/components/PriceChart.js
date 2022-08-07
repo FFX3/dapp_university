@@ -21,7 +21,6 @@ const renderPriceChart = (priceChartData) => {
 }
 
 const PriceChart = (props) => {
-	console.log(props.priceChartData)
 	return (
 		<div className="card bg-dark text-white">
 			<div className="card-header">

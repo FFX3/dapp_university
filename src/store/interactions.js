@@ -10,11 +10,18 @@ import {
 	orderCancelling,
 	orderCancelled,
 	orderFilling,
-	orderFilled
+	orderFilled,
+	etherBalanceLoaded,
+	tokenBalanceLoaded,
+	exchangeEtherBalanceLoaded,
+	exchangeTokenBalanceLoaded,
+	balancesLoaded,
+	balancesLoading
 } from "./actions";
 
 import Token from '../abis/Token.json'
 import Exchange from '../abis/Exchange.json'
+import { ETHER_ADDRESS } from "../helpers";
 
 export const loadWeb3 = (dispatch) => {
 	const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
@@ -85,12 +92,19 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
 	})
 }
 
-export const subscribeToEvents = async (exchange, dispatch) => {
+export const subscribeToEvents = async (dispatch, web3, exchange, token, account) => {
 	exchange.events.Cancel({}, (error, event) => {
 		dispatch(orderCancelled(event.returnValues))
 	})
+
 	exchange.events.Trade({}, (error, event) => {
 		dispatch(orderFilled(event.returnValues))
+	})
+
+	exchange.events.Deposit({}, (error, event) => {
+		if(account === event.returnValues.user){
+			loadBalances(dispatch, web3, exchange, token, account)
+		}
 	})
 }
 
@@ -98,6 +112,33 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 	exchange.methods.fillOrder(order.id).send({ from: account })
 	.on('transactionHash', (hash) => {
 		dispatch(orderFilling(order.id))
+	})
+	.on('error', (error) => {
+		console.log(error)
+		window.alert('There was an error!')
+	})
+}
+
+export const loadBalances = async (dispatch, web3, exchange, token, account) => {
+	const etherBalance = await web3.eth.getBalance(account)
+	dispatch(etherBalanceLoaded(etherBalance))
+
+	const tokenBalance = await token.methods.balanceOf(account).call()
+	dispatch(tokenBalanceLoaded(tokenBalance))
+
+	const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
+	dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance))
+
+	const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
+	dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance))
+
+	dispatch(balancesLoaded())
+}
+
+export const depositEther = async (dispatch, exchange, web3, amount, account) => {
+	exchange.methods.depositEther().send({ from: account, value: web3.utils.toWei(amount, 'ether') })
+	.on('transactionHash', (hash) => {
+		dispatch(balancesLoading())
 	})
 	.on('error', (error) => {
 		console.log(error)
