@@ -54,21 +54,24 @@ const exchange = (state = {}, action) => {
 		case 'ORDER_FILLING':
 				return {...state, orderFilling: action.orderId}
 		case 'ORDER_FILLED':
-			let orderFillingID = state.orderFilling
-			const filledOrderId = action.order.id
-			if(orderFillingID === filledOrderId) { orderFillingID = 0 }
+			{
+				let orderFillingID = state.orderFilling
+				const filledOrderId = action.order.id
+				if(orderFillingID === filledOrderId) { orderFillingID = 0 }
 
-			let data = state.filledOrders.data
-			const index = state.filledOrders.data.findIndex(order => order.id === action.order.id)
-			if(index === -1){
-				data = [...state.filledOrders.data, action.order]
-			}
-			return {
-				...state,
-				orderFilling: orderFillingID,
-				cancelledOrders: {
-					...state.cancelledOrders,
-					data
+			
+				let data = state.filledOrders.data
+				const index = state.filledOrders.data.findIndex(order => order.id === action.order.id)
+				if(index === -1){
+					data = [...state.filledOrders.data, action.order]
+				}
+				return {
+					...state,
+					orderFilling: orderFillingID,
+					cancelledOrders: {
+						...state.cancelledOrders,
+						data
+					}
 				}
 			}
 
@@ -80,6 +83,28 @@ const exchange = (state = {}, action) => {
 				return {...state, etherBalance: action.balance}
 			case 'EXCHANGE_TOKEN_BALANCE_LOADED':
 				return {...state, tokenBalance: action.balance}
+
+			case 'ORDER_PROCESSING':
+				return {...state, orderProcessing: true}
+			case 'ORDER_CREATED':
+				{
+					let orderProcessing = true
+					if(action.order.user === action.account) orderProcessing = false
+
+					let data = state.allOrders.data
+					const index = state.allOrders.data.findIndex(order => order.id === action.order.id)
+					if(index === -1){
+						data = [...state.allOrders.data, action.order]
+					}
+					return {
+						...state,
+						orderProcessing,
+						allOrders: {
+							...state.allOrders,
+							data
+						}
+					}
+				}
 			
 			default:
 				return state

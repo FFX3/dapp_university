@@ -117,3 +117,17 @@ export const balancesLoading = () => {
 		'type': 'BALANCES_LOADING'
 	}
 }
+
+export const orderProcessing = () => {
+	return {
+		'type': 'ORDER_PROCESSING'
+	}
+}
+
+export const orderCreated = (order, account) => {
+	return {
+		'type': 'ORDER_CREATED',
+		order,
+		account
+	}
+}

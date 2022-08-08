@@ -100,7 +100,7 @@ const Balance = (props) => {
 						</form>
 					</Tab>
 					<Tab eventKey='withdraw' title='Withdraw' className='bg-dark'>
-					<form className="row" onSubmit={(event) => {
+						<form className="row" onSubmit={(event) => {
 							event.preventDefault()
 							widthdrawEther(props.dispatch, props.exchange, props.web3, widthdrawTokenAmountRef.current.value, props.account)
 						}}

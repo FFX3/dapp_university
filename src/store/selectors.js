@@ -317,3 +317,6 @@ export const exchangeTokenBalanceSelector = createSelector(
 		return formatBalance(balance)
 	}
 )
+
+const processingOrder = state => get(state, 'exchange.orderProcessing', false)
+export const processingOrderSelector = createSelector(processingOrder, status => status)
